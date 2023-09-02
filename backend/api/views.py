@@ -9,6 +9,23 @@ from .models import Notes, Category
 from .serializers import NotesSerializers
 from api.renderer import ErrorRenderer
 
+# Get published notes to show all users
+class PublishedNoteView(APIView):
+    def get(self, request, format=None):
+        try:
+            # Retrieve notes which is published 
+            notes = Notes.objects.filter(is_published=True)
+            
+            # Serialize the retrieved notes
+            serializer = NotesSerializers(notes, many=True)
+            
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            # Handle exceptions (e.g., database errors, serializer errors)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        
+
 class NotesView(APIView):
     renderer_classes = [ErrorRenderer]
     permission_classes = [IsAuthenticated]
@@ -23,7 +40,7 @@ class NotesView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             # Handle exceptions (e.g., database errors, serializer errors)
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response( str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self, request, format=None):
         try:
@@ -100,4 +117,4 @@ class NotesView(APIView):
             return Response({'error': 'Note not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             # Handle other exceptions
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
