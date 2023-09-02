@@ -9,7 +9,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class NotesSerializers(serializers.ModelSerializer):
-    category = CategorySerializer()
+    category = serializers.StringRelatedField()
     class Meta:
         model = Notes
         fields = "__all__"
+        
