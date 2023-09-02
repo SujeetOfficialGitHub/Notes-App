@@ -47,9 +47,9 @@ class LoginView(APIView):
 class ProfileView(APIView):
     permission_classes  = [IsAuthenticated]
     renderer_classes = [ErrorRenderer]
-    def get(self, request, id):
+    def get(self, request):
         try:
-            user = User.objects.get(id=id)
+            user = User.objects.get(id=request.user.id)
             serializer = ProfileSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
             return Res
