@@ -11,11 +11,12 @@ const NotesProvider = ({children}) => {
         if (initialToken){
             setToken(initialToken)
         }
-    }, [])
+    }, [token])
 
     const handleLogout = () => {
+        localStorage.removeItem('token')
         setToken('')
-        localStorage.getItem('token')
+        console.log('logout')
     }
     return (
     <NotesContext.Provider value={{
