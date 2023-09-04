@@ -44,6 +44,7 @@ const Login = () => {
             const res = await login(credentials);
             // console.log(res)
             setToken(res?.token?.access);
+            localStorage.setItem("token", res?.token?.access)
             toast({
                 title: "Login successfully",
                 status: 'success',

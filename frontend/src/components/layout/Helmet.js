@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 
-const Helmet = ({children}) => {
+const Helmet = ({children, title}) => {
+    document.title = title
   return (
     <Box display="grid"  maxW="1800px" mx="auto">
         {children}

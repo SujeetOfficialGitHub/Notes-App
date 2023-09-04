@@ -42,6 +42,7 @@ const Signup = () => {
                 const res = await signup(credentials)
                 // console.log(res)
                 setToken(res?.token?.access)
+                localStorage.setItem("token", res?.token?.access)
                 toast({
                     title: "Sign up successfully",
                     status: 'success',

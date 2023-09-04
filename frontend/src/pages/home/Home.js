@@ -47,21 +47,21 @@ const Home = () => {
   }, [toast])
 
   return (
-  <Helmet>
+  <Helmet title={"Home"}>
+    {loading && 
+    <Box
+    w="100vw" 
+    h="100vh" 
+    alignItems="center" 
+    justifyContent="center" 
+    display="flex" 
+    position="fixed"
+    zIndex="9999"
+    >
+        <Spinner size="xl" thickness='4px'/>
+    </Box>}
+    {pubNotes.length === 0 && !loading && <Box w="100%" bg="purple" p={5} mt={5} color="white" textAlign="center" fontWeight="bold">Notes Not Found</Box>}
     <SimpleGrid p={5} spacing={4} className='card__items' templateColumns={['repeat(auto-fit, minmax(100%, 1fr))', 'repeat(auto-fit, minmax(350px, 1fr))']}>
-      {loading && 
-      <Box
-      w="100vw" 
-      h="100vh" 
-      alignItems="center" 
-      justifyContent="center" 
-      display="flex" 
-      position="fixed"
-      zIndex="9999"
-      >
-          <Spinner size="xl" thickness='4px'/>
-      </Box>}
-      {pubNotes.length === 0 && !loading && <Box w="100%" bg="purple" p={5} color="white" textAlign="center" fontWeight="bold">Notes Not Found</Box>}
       {pubNotes && 
         pubNotes.map((notes) => (
           <Card key={notes.id} boxShadow="outline">

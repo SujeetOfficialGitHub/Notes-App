@@ -16,7 +16,7 @@ const NotesProvider = ({children}) => {
     const handleLogout = () => {
         localStorage.removeItem('token')
         setToken('')
-        console.log('logout')
+        // console.log('logout')
     }
     return (
     <NotesContext.Provider value={{

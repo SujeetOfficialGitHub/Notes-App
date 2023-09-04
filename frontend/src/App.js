@@ -8,6 +8,7 @@ import About from './pages/about/About';
 import Contact from './pages/contact/Contact';
 import { NotesState } from './context';
 import Header from './components/layout/Header';
+import { Heading } from '@chakra-ui/react';
 
 function App() {
   const { isLoggedIn } = NotesState();
@@ -16,11 +17,12 @@ function App() {
     <Header />
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path='/profile' element={<Profile />} />
-      <Route path='/my-notes' element={<MyNotes />} />
+      {isLoggedIn && <Route path='/profile' element={<Profile />} />}
+      {isLoggedIn && <Route path='/my-notes' element={<MyNotes />} />}
       <Route path='/about' element={<About />} />
       <Route path='/contact' element={<Contact />} />
       <Route path='/login' element={!isLoggedIn ? <Auth/> : <Navigate to="/" />} />
+      <Route path='*' element={<Heading display="flex" justifyContent="center" mt={5}>Page Not Found</Heading>} />
     </Routes>
     </>
   );

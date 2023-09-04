@@ -48,15 +48,12 @@ function Header() {
         {/* Desktop navigation links  */}
         <HStack spacing={5} display={{base: 'none', md: "flex"}}>
             <NavLink to="/" className="desktop__nav-link">Home</NavLink>
-            {isLoggedIn ? (<>
-                <NavLink to="/profile" className="desktop__nav-link">Profile</NavLink>
-                <NavLink to="/my-notes" className="desktop__nav-link">My Notes</NavLink>
-                <NavLink to="/about" className="desktop__nav-link">About</NavLink>
-                <NavLink to="/contact" className="desktop__nav-link">Contact</NavLink>
-                <Button onClick={() => handleLogout()}>Logout</Button>
-                </> ) : (<>
-                    <NavLink to="/login" className="desktop__nav-link">Login / Sign Up</NavLink>
-                </>)}
+            {isLoggedIn && <NavLink to="/profile" className="desktop__nav-link">Profile</NavLink>}
+            {isLoggedIn && <NavLink to="/my-notes" className="desktop__nav-link">My Notes</NavLink>}
+            <NavLink to="/about" className="desktop__nav-link">About</NavLink>
+            <NavLink to="/contact" className="desktop__nav-link">Contact</NavLink>
+            {isLoggedIn && <Button onClick={() => handleLogout()}>Logout</Button>}
+            {!isLoggedIn && <NavLink to="/login" className="desktop__nav-link">Login / Sign Up</NavLink>}
         </HStack>
       </Flex>
 
@@ -74,15 +71,12 @@ function Header() {
             <DrawerBody>
                 <VStack spacing={5}>
                     <NavLink to="/" className="mobile__nav-link">Home</NavLink>
-                {isLoggedIn ? (<>
-                    <NavLink to="/profile" className="mobile__nav-link">Profile</NavLink>
-                    <NavLink to="/my-notes" className="mobile__nav-link">My Notes</NavLink>
+                    {isLoggedIn && <NavLink to="/profile" className="mobile__nav-link">Profile</NavLink>}
+                    {isLoggedIn && <NavLink to="/my-notes" className="mobile__nav-link">My Notes</NavLink>}
                     <NavLink to="/about" className="mobile__nav-link">About</NavLink>
                     <NavLink to="/contact" className="mobile__nav-link">Contact</NavLink>
-                    <Button onClick={() => handleLogout()}>Logout</Button>
-                </>) : (<>
-                    <NavLink to="/login" className="mobile__nav-link">Login / Sign Up</NavLink>
-                </>)}
+                    {isLoggedIn && <Button onClick={() => handleLogout()}>Logout</Button>}
+                    {!isLoggedIn && <NavLink to="/login" className="mobile__nav-link">Login / Sign Up</NavLink>}
                 </VStack>
             </DrawerBody>
         </DrawerContent>
