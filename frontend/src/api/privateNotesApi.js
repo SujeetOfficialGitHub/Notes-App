@@ -26,9 +26,9 @@ export const getNotes = async() => {
         throw error
     }
 }
-export const updateNotes = async(inputData, notesId) => {
+export const updateNotes = async(inputData, noteId) => {
     try {
-        const res = await apiClient.put(`/api/notes/update-notes/${notesId}`, inputData);
+        const res = await apiClient.put(`/api/notes/update-notes/${noteId}`, inputData);
         return res.data
     } catch (error) {
         throw error
@@ -42,9 +42,9 @@ export const addNotes = async(inputData) => {
         throw error
     }
 }
-export const deleteNotes = async() => {
+export const deleteNotes = async(noteId) => {
     try {
-        const res = await apiClient.get('/api/notes');
+        const res = await apiClient.delete(`/api/notes/delete-notes/${noteId}`);
         return res.data
     } catch (error) {
         throw error

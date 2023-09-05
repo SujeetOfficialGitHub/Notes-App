@@ -80,8 +80,10 @@ class NotesView(APIView):
             
             # Use the chosen category for the note
             note.category = category
+            data = request.data 
+            data['user'] = request.user.id
             
-            serializer = NotesSerializers(note, data=request.data)
+            serializer = NotesSerializers(note, data=data)
             serializer.is_valid(raise_exception=True)
             
             # Save the updated note object
@@ -106,13 +108,13 @@ class NotesView(APIView):
             # Serialize the note data before deleting
             serializer = NotesSerializers(note)
             serializer.data['category'] = note.category
-            note_data = serializer.data
+            note_data = serializer.data.copy()
             
             # Delete the note object from the database
             note.delete()
-            
+ 
             # Include the deleted note data in the response
-            return Response(note_data, status=status.HTTP_204_NO_CONTENT)
+            return Response(note_data, status=status.HTTP_200_OK)
         except Notes.DoesNotExist:
             return Response({'error': 'Note not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:

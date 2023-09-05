@@ -20,51 +20,44 @@ import Helmet from '../../components/layout/Helmet'
 import {AiOutlineEye, AiOutlinePlus} from 'react-icons/ai'
 import {FaRegEdit, FaTrash} from 'react-icons/fa'
 import {TiLockClosedOutline, TiLockOpenOutline} from 'react-icons/ti'
-import { addNotes, getNotes } from '../../api/privateNotesApi'
+import { deleteNotes, getNotes } from '../../api/privateNotesApi'
 import AddUpdateNotesModels from '../../components/utils/AddUpdateNotesModels'
-
+import {NotesState} from '../../context'
 
 const MyNotes = () => {
-  const [myNotes, setMyNotes] = useState([])
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
   const [publish, setPublish] = useState(false)
+  const [notesId, setNotesId] = useState(0)
 
   const [isLessThan500] = useMediaQuery("(max-width: 500px)")
   
   const toast = useToast()
+  const {myNotes, setMyNotes} = NotesState()
 
-  const handleSubmit = async() => {
-    if (!title || !category || !description){
+  const handleDeleteNotes = async(nodeId) => {
+    try {
+      const res = await deleteNotes(nodeId)
+      // console.log(res)
       toast({
-        title: "Warning",
-        description: "You are missing required fields",
-        status: 'warning',
+        title: "Success",
+        description: 'Notes deleted successfully',
+        status: 'success',
         duration: 5000,
         isClosable: true,
-        position: "top-right"
+        position: 'top-right'
       })
-    }
-    try {
-      const inputData = {title, category, description, is_published: publish}
-      const res = await addNotes(inputData)
-      // console.log(res)
-      setTitle('')
-      setCategory('')
-      setDescription('')
-      setPublish(false)
-      setMyNotes((prev) => [res, ...prev])
+      setMyNotes(myNotes.filter(note => note.id !== res.id))
     } catch (error) {
-      // console.log(error)
       toast({
         title: "Error Occured",
-        // description: "You are missing required fields",
-        status: 'warning',
+        description: 'Failed to delete notes',
+        status: 'error',
         duration: 5000,
         isClosable: true,
-        position: "top-right"
+        position: 'top-right'
       })
     }
   }
@@ -91,8 +84,15 @@ const MyNotes = () => {
       }
     }
     fetchNotes()
-  }, [toast])
+  }, [toast, setMyNotes])
 
+  const handlePopulateData = (notes) => {
+    setNotesId(notes.id)
+    setTitle(notes.title)
+    setCategory(notes.category)
+    setDescription(notes.description)
+    setPublish(notes.is_published)
+  }
 
   return (
   <Helmet title={"My Notes"}>
@@ -104,8 +104,8 @@ const MyNotes = () => {
       setCategory={setCategory} 
       description={description} 
       setDescription={setDescription}
+      publish={publish}
       setPublish={setPublish} 
-      handleSubmit={handleSubmit}
       >
         <Button 
         pos={isLessThan500 ? 'relative' : 'absolute'}
@@ -130,7 +130,7 @@ const MyNotes = () => {
     >
         <Spinner size="xl" thickness='4px'/>
     </Box>}
-    {myNotes.length === 0 && !loading && <Box w="100%" bg="purple" p={5} mt={5} color="white" textAlign="center" fontWeight="bold">Notes Not Found</Box>}
+    {myNotes && myNotes.length === 0 && !loading && <Box w="100%" bg="purple" p={5} mt={5} color="white" textAlign="center" fontWeight="bold">Notes Not Found</Box>}
     <SimpleGrid p={5} spacing={4} className='card__items' templateColumns={['repeat(auto-fit, minmax(100%, 1fr))', 'repeat(auto-fit, minmax(350px, 1fr))']}>
       {myNotes && 
         myNotes.map((notes) => (
@@ -148,12 +148,25 @@ const MyNotes = () => {
                   <IconButton icon={<AiOutlineEye fontSize="20px" />} bg="purple" color="white" colorScheme='purple' />
                 </Tooltip>
 
-                <Tooltip hasArrow label="Click to Edit Note">
-                  <IconButton icon={<FaRegEdit fontSize="20px" />} bg="yellow.600" color="white" colorScheme='yellow' />
-                </Tooltip>
+                <AddUpdateNotesModels
+                  title={title} 
+                  setTitle={setTitle} 
+                  category={category} 
+                  setCategory={setCategory} 
+                  description={description} 
+                  setDescription={setDescription}
+                  publish={publish}
+                  setPublish={setPublish} 
+                  notesId={notesId}
+                  setNotesId={setNotesId}
+                >
+                  <Tooltip hasArrow label="Click to Edit Note">
+                    <IconButton onClick={() => handlePopulateData(notes)} icon={<FaRegEdit fontSize="20px" />} bg="yellow.600" color="white" colorScheme='yellow' />
+                  </Tooltip>
+                </AddUpdateNotesModels>
 
                 <Tooltip hasArrow label="Click to Delete Note">
-                  <IconButton icon={<FaTrash fontSize="20px" />} bg="red.600" color="white" colorScheme='red' />
+                  <IconButton onClick={() => handleDeleteNotes(notes.id)} icon={<FaTrash fontSize="20px" />} bg="red.600" color="white" colorScheme='red' />
                 </Tooltip>
 
                 <Tooltip hasArrow label={notes.is_published ? "Click to UnPublish Note" : "Click to Publish Note"} >

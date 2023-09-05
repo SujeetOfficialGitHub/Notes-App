@@ -4,7 +4,8 @@ const NotesContext = createContext({});
 
 const NotesProvider = ({children}) => {
     const [token, setToken] = useState('');
-    const isLoggedIn = !!token 
+    const [myNotes, setMyNotes] = useState([]);
+    const isLoggedIn = !!token;
 
     useEffect(() => {
         const initialToken = localStorage.getItem('token')
@@ -23,7 +24,9 @@ const NotesProvider = ({children}) => {
         token,
         setToken,
         handleLogout,
-        isLoggedIn
+        isLoggedIn,
+        myNotes,
+        setMyNotes
     }}>
         {children}
     </NotesContext.Provider>
