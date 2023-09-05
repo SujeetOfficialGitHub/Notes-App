@@ -30,7 +30,7 @@ const MyNotes = () => {
       setLoading(true)
       try {
         const res = await getNotes();
-        console.log(res)
+        // console.log(res)
         setMyNotes(res)
         setLoading(false)
       } catch (error) {

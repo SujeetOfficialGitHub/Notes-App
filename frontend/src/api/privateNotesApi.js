@@ -9,6 +9,15 @@ const apiClient = axios.create({
     }
 })
 
+export const getProfileData = async() => {
+    try {
+        const res = await apiClient.get('/api/accounts/profile');
+        return res.data
+    } catch (error) {
+        throw error
+    }
+}
+
 export const getNotes = async() => {
     try {
         const res = await apiClient.get('/api/notes');
