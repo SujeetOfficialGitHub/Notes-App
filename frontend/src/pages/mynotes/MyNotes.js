@@ -13,7 +13,7 @@ import {
   Spinner,
   Tooltip,
   Button,
-  useMediaQuery
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { maxLetters } from '../../components/helperFunctions/stringUtility'
 import Helmet from '../../components/layout/Helmet'
@@ -22,7 +22,9 @@ import {FaRegEdit, FaTrash} from 'react-icons/fa'
 import {TiLockClosedOutline, TiLockOpenOutline} from 'react-icons/ti'
 import { deleteNotes, getNotes } from '../../api/privateNotesApi'
 import AddUpdateNotesModels from '../../components/utils/AddUpdateNotesModels'
+import ViewNotesModel from '../../components/utils/ViewNotesModel'
 import {NotesState} from '../../context'
+
 
 const MyNotes = () => {
   const [loading, setLoading] = useState(false)
@@ -134,9 +136,9 @@ const MyNotes = () => {
     <SimpleGrid p={5} spacing={4} className='card__items' templateColumns={['repeat(auto-fit, minmax(100%, 1fr))', 'repeat(auto-fit, minmax(350px, 1fr))']}>
       {myNotes && 
         myNotes.map((notes) => (
-          <Card key={notes.id} boxShadow="outline">
+          <Card key={notes.id} boxShadow="outline" maxW="350px" m="auto">
               <CardHeader pb={1} display="flex" justifyContent="space-between">
-                <Heading size="md" textAlign="justify">{notes.title}</Heading>
+                <Heading size="md" textAlign="justify">{maxLetters(notes.title, 50)}</Heading>
               </CardHeader>
 
               <CardBody py={0}>
@@ -144,9 +146,11 @@ const MyNotes = () => {
               </CardBody>
 
               <CardFooter display="flex" flexWrap="wrap" justifyContent="space-between">
-                <Tooltip hasArrow label="Click to View Details">
-                  <IconButton icon={<AiOutlineEye fontSize="20px" />} bg="purple" color="white" colorScheme='purple' />
-                </Tooltip>
+                <ViewNotesModel notes={notes}>
+                  <Tooltip hasArrow label="Click to View Details">
+                    <IconButton icon={<AiOutlineEye fontSize="20px" />} bg="purple" color="white" colorScheme='purple' />
+                  </Tooltip>
+                </ViewNotesModel>
 
                 <AddUpdateNotesModels
                   title={title} 

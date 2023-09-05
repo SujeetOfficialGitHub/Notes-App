@@ -1,13 +1,29 @@
 import axios from 'axios'
 import config from '../config'
 
+
 const apiClient = axios.create({
     baseURL: config.apiUrl,
     headers: {
-        "Content-Type" : "application/json",
-        "Authorization": `Bearer ${localStorage.getItem('token')}`
+        "Content-Type" : "application/json"
     }
 })
+
+// interceptor to set the Authorization header before each request
+apiClient.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+
 
 export const getProfileData = async() => {
     try {

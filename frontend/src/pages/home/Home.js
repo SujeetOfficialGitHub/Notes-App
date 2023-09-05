@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { maxLetters } from '../../components/helperFunctions/stringUtility'
 import Helmet from '../../components/layout/Helmet'
+import ViewNotesModel from '../../components/utils/ViewNotesModel'
 
 
 const Home = () => {
@@ -64,17 +65,19 @@ const Home = () => {
     <SimpleGrid p={5} spacing={4} className='card__items' templateColumns={['repeat(auto-fit, minmax(100%, 1fr))', 'repeat(auto-fit, minmax(350px, 1fr))']}>
       {pubNotes && 
         pubNotes.map((notes) => (
-          <Card key={notes.id} boxShadow="outline">
+          <Card key={notes.id} boxShadow="outline" maxW="350px" m="auto">
               <CardHeader pb={1}>
-                <Heading size="md">{notes.title}</Heading>
+                <Heading size="md">{maxLetters(notes.title, 50)}</Heading>
               </CardHeader>
               <CardBody py={0}>
                 <Text>{maxLetters(notes.description, 100)}</Text>
               </CardBody>
               <CardFooter >
-                <Button bg="purple" color="white" colorScheme='purple'>
-                  View More
-                </Button>
+                <ViewNotesModel notes={notes}>
+                  <Button bg="purple" color="white" colorScheme='purple'>
+                    View More
+                  </Button>
+                </ViewNotesModel>
               </CardFooter>
             </Card>
         ))}

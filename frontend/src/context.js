@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
+import {useNavigate} from 'react-router-dom'
 const NotesContext = createContext({});
 
 const NotesProvider = ({children}) => {
     const [token, setToken] = useState('');
     const [myNotes, setMyNotes] = useState([]);
     const isLoggedIn = !!token;
+    const navigate = useNavigate()
 
     useEffect(() => {
         const initialToken = localStorage.getItem('token')
@@ -18,6 +19,7 @@ const NotesProvider = ({children}) => {
         localStorage.removeItem('token')
         setToken('')
         // console.log('logout')
+        navigate('/')
     }
     return (
     <NotesContext.Provider value={{
