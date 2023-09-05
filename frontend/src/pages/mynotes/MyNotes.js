@@ -11,19 +11,63 @@ import {
   CardFooter,
   IconButton,
   Spinner,
-  Tooltip
+  Tooltip,
+  Button,
+  useMediaQuery
 } from '@chakra-ui/react'
 import { maxLetters } from '../../components/helperFunctions/stringUtility'
 import Helmet from '../../components/layout/Helmet'
-import {AiOutlineEye} from 'react-icons/ai'
+import {AiOutlineEye, AiOutlinePlus} from 'react-icons/ai'
 import {FaRegEdit, FaTrash} from 'react-icons/fa'
 import {TiLockClosedOutline, TiLockOpenOutline} from 'react-icons/ti'
-import { getNotes } from '../../api/privateNotesApi'
+import { addNotes, getNotes } from '../../api/privateNotesApi'
+import AddUpdateNotesModels from '../../components/utils/AddUpdateNotesModels'
+
 
 const MyNotes = () => {
   const [myNotes, setMyNotes] = useState([])
   const [loading, setLoading] = useState(false)
+  const [title, setTitle] = useState('')
+  const [category, setCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [publish, setPublish] = useState(false)
+
+  const [isLessThan500] = useMediaQuery("(max-width: 500px)")
+  
   const toast = useToast()
+
+  const handleSubmit = async() => {
+    if (!title || !category || !description){
+      toast({
+        title: "Warning",
+        description: "You are missing required fields",
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+        position: "top-right"
+      })
+    }
+    try {
+      const inputData = {title, category, description, is_published: publish}
+      const res = await addNotes(inputData)
+      // console.log(res)
+      setTitle('')
+      setCategory('')
+      setDescription('')
+      setPublish(false)
+      setMyNotes((prev) => [res, ...prev])
+    } catch (error) {
+      // console.log(error)
+      toast({
+        title: "Error Occured",
+        // description: "You are missing required fields",
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+        position: "top-right"
+      })
+    }
+  }
 
   useEffect(() => {
     const fetchNotes = async() => {
@@ -34,7 +78,7 @@ const MyNotes = () => {
         setMyNotes(res)
         setLoading(false)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         toast({
           title: "Error Occured",
           description: "Failed to fetch Notes",
@@ -49,9 +93,31 @@ const MyNotes = () => {
     fetchNotes()
   }, [toast])
 
+
   return (
   <Helmet title={"My Notes"}>
     <Heading textAlign="center" my={2}>My Notes</Heading>
+    <AddUpdateNotesModels 
+      title={title} 
+      setTitle={setTitle} 
+      category={category} 
+      setCategory={setCategory} 
+      description={description} 
+      setDescription={setDescription}
+      setPublish={setPublish} 
+      handleSubmit={handleSubmit}
+      >
+        <Button 
+        pos={isLessThan500 ? 'relative' : 'absolute'}
+        right={isLessThan500 ? '' : 5}
+        top={3}
+        display="flex"
+        m="auto"
+        bg="purple"
+        colorScheme='purple'
+        ><AiOutlinePlus /> Add Notes</Button>
+    </AddUpdateNotesModels>
+
     {loading && 
     <Box
     w="100vw" 

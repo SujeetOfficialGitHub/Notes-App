@@ -26,3 +26,27 @@ export const getNotes = async() => {
         throw error
     }
 }
+export const updateNotes = async(inputData, notesId) => {
+    try {
+        const res = await apiClient.put(`/api/notes/update-notes/${notesId}`, inputData);
+        return res.data
+    } catch (error) {
+        throw error
+    }
+}
+export const addNotes = async(inputData) => {
+    try {
+        const res = await apiClient.post('/api/notes/add-notes/', inputData);
+        return res.data
+    } catch (error) {
+        throw error
+    }
+}
+export const deleteNotes = async() => {
+    try {
+        const res = await apiClient.get('/api/notes');
+        return res.data
+    } catch (error) {
+        throw error
+    }
+}
