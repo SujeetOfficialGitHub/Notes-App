@@ -1,9 +1,9 @@
 const config = {
     development: {
-      apiUrl: 'http://localhost:8000', // Use the correct development URL
+      apiUrl: 'http://localhost:8000',
     },
     production: {
-      apiUrl: 'https://www.example.com', // Use the correct production URL
+      apiUrl: 'https://notespublish.pythonanywhere.com', 
     },
   };
   
